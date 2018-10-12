@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Travel Journal</string>
+    <string name="facebook_app_id">2199676706956391</string>
+    <string name="fb_login_protocol_scheme">fb2199676706956391</string>
+</resources>
