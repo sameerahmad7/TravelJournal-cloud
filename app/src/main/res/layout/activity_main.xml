@@ -21,7 +21,7 @@
         android:id="@+id/emailText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:autoText="true"
         android:ems="10"
         android:hint="Email"
@@ -35,7 +35,7 @@
         android:id="@+id/passwordText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/rounded_button_transparent"
         android:text="Login"
         android:textColor="@color/colorAccent"
@@ -62,30 +62,33 @@
     <com.facebook.login.widget.LoginButton
         android:id="@+id/buttonFacebookLogin"
         android:layout_width="wrap_content"
-        android:layout_height="300dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/googleSignInButton"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login" />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/googleSignInButton"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/buttonFacebookLogin"
-        app:layout_constraintTop_toBottomOf="@+id/login"></com.google.android.gms.common.SignInButton>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonFacebookLogin"></com.google.android.gms.common.SignInButton>
 
     <TextView
         android:id="@+id/Signup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
         android:tag="Signup"
         android:text="Don't have an account? Sign Up"
         android:textColor="@color/colorAccent"
@@ -93,7 +96,7 @@
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonFacebookLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/googleSignInButton" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -102,9 +105,10 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonFacebookLogin"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toBottomOf="@+id/googleSignInButton"
+         />
 
 </android.support.constraint.ConstraintLayout>
