@@ -50,8 +50,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -70,12 +73,23 @@ private DatePickerDialog.OnDateSetListener mDateSetListener;
     String countryName;
     String profileImageUrl;
     Button saveBtn;
+    ArrayList<String> countries;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth=FirebaseAuth.getInstance();
+        mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(firebaseAuth.getCurrentUser()==null)
+                {
+                    startActivity(new Intent(ProfileActivity.this,MainActivity.class));
+                    finish();
+                }
+            }
+        });
         setContentView(R.layout.activity_profile);
         saveBtn=(Button)findViewById(R.id.updateProfile);
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -84,7 +98,7 @@ private DatePickerDialog.OnDateSetListener mDateSetListener;
                 saveUserInformation();
             }
         });
-        databaseUser= FirebaseDatabase.getInstance().getReference("users");
+        databaseUser= FirebaseDatabase.getInstance().getReference("users").child(mAuth.getCurrentUser().getUid());
         spinner=(Spinner)findViewById(R.id.countrySpinner);
         imageView=(ImageView)findViewById(R.id.camera);
         nameText=(EditText)findViewById(R.id.nameText);
@@ -92,7 +106,7 @@ private DatePickerDialog.OnDateSetListener mDateSetListener;
         noText=(EditText)findViewById(R.id.phoneNumber);
         progressBar=(ProgressBar)findViewById(R.id.progressBar3);
         Locale[] locale = Locale.getAvailableLocales();
-        final ArrayList<String> countries = new ArrayList<String>();
+        countries = new ArrayList<String>();
         String country;
         for( Locale loc : locale ){
             country = loc.getDisplayCountry();
@@ -151,7 +165,38 @@ private DatePickerDialog.OnDateSetListener mDateSetListener;
                 dob.setText(date);
             }
         };
+        databaseUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                showData(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         loadUserInformation();
+
+    }
+    private void showData(DataSnapshot snapshot)
+    {
+
+
+           nameText.setText(snapshot.getValue(User.class).getName());
+            cityText.setText(snapshot.getValue(User.class).getCity());
+            dob.setText(snapshot.getValue(User.class).getDob());
+            for(String country:countries)
+            {
+                if(country.equals(snapshot.getValue(User.class).getCountry()))
+                {
+                spinner.setSelection(countries.indexOf(country));
+                }
+            }
+            noText.setText(snapshot.getValue(User.class).getNumber());
+
+
+
 
     }
     private void loadUserInformation() {
@@ -203,7 +248,8 @@ public void saveUserInformation()
     String name=nameText.getText().toString();
     String dateob=dob.getText().toString();
     String city=cityText.getText().toString();
-    if(TextUtils.isEmpty(name)&&TextUtils.isEmpty(dateob)&&TextUtils.isEmpty(city) && TextUtils.isEmpty(countryName))
+    String number=noText.getText().toString();
+    if(TextUtils.isEmpty(name)&&TextUtils.isEmpty(dateob)&&TextUtils.isEmpty(city) && TextUtils.isEmpty(countryName) && TextUtils.isEmpty(number))
     {
 
         Toast.makeText(getApplicationContext(),"All data fields must be filled",Toast.LENGTH_SHORT).show();
@@ -230,8 +276,8 @@ public void saveUserInformation()
                         });
             }
         }
-        User user=new User(name,city,dateob,countryName);
-        databaseUser.child(mAuth.getCurrentUser().getUid()).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+        User user=new User(name,city,dateob,countryName,number);
+        databaseUser.setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG).show();

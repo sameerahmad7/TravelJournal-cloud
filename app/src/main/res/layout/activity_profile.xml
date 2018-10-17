@@ -42,7 +42,6 @@
             android:ems="10"
             android:hint="Name"
             android:inputType="textPersonName"
-            android:text="Sameer Ahmad"
             android:textAlignment="center"
             android:textColor="#ffff"
             app:layout_constraintEnd_toEndOf="parent"
@@ -123,11 +122,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:background="#00000000"
-        android:ems="10"
         android:editable="false"
+        android:ems="10"
         android:focusable="false"
         android:inputType="textPersonName"
-        android:text="20/20/2012"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ageLabel"
         app:layout_constraintTop_toBottomOf="@+id/profileContainer" />
@@ -142,7 +140,6 @@
         android:background="#00000000"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Lahore"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/countrySpinner" />
@@ -157,7 +154,6 @@
         android:background="#00000000"
         android:ems="10"
         android:inputType="phone"
-        android:text="03038747329"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView6"
         app:layout_constraintTop_toBottomOf="@+id/cityName" />
