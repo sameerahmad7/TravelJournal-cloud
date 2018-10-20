@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/profile"
+        android:icon="@drawable/ic_action_profile"
+        android:title="My Profile"/>
+    <item android:title="Diary">
+        <menu>
+            <item
+                android:icon="@drawable/ic_action_diary"
+                android:title="City Trips"
+                android:id="@+id/cityTrips"/>
+            <item
+                android:icon="@drawable/ic_action_diary"
+                android:title="Out of City Trips"
+                android:id="@+id/outCityTrips"/>
+            <item
+                android:icon="@drawable/ic_action_diary"
+                android:title="Out of State Trips"
+                android:id="@+id/stateTrips"/>
+        </menu>
+    </item>
+    <group android:checkableBehavior="single"
+        android:id="@+id/group2">
+    <item android:id="@+id/logout"
+        android:icon="@drawable/ic_action_logout"
+        android:title="Logout"/>
+    </group>
+
+</menu>
