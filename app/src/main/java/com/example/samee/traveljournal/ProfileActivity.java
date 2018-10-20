@@ -17,6 +17,9 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -66,6 +69,9 @@ Spinner spinner;
 EditText nameText,cityText,noText;
 ImageView imageView;
 DatabaseReference databaseUser;
+    private DrawerLayout dl;
+    private ActionBarDrawerToggle t;
+    private NavigationView nv;
 private DatePickerDialog.OnDateSetListener mDateSetListener;
     private static final int CHOOSE_IMAGE = 101;
     Uri uriProfileImage;
@@ -74,7 +80,7 @@ private DatePickerDialog.OnDateSetListener mDateSetListener;
     String profileImageUrl;
     Button saveBtn;
     ArrayList<String> countries;
-
+ImageView profilePic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +97,64 @@ private DatePickerDialog.OnDateSetListener mDateSetListener;
             }
         });
         setContentView(R.layout.activity_profile);
+        dl = (DrawerLayout)findViewById(R.id.activity_main);
+
+        t = new ActionBarDrawerToggle(
+                this, dl, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        dl.addDrawerListener(t);
+        t.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        nv = (NavigationView)findViewById(R.id.nv);
+        nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if(id==R.id.logout)
+                {
+                    if(null!=mAuth.getCurrentUser()) {
+                        mAuth.signOut();
+                        if(null!= Profile.getCurrentProfile())
+                        {
+                            LoginManager.getInstance().logOut();
+                        }
+
+                    }
+                }
+                else if(id==R.id.profile)
+                {
+                  dl.closeDrawers();
+
+
+                }
+                else if(id==R.id.cityTrips)
+                {
+                    startActivity(new Intent(ProfileActivity.this,CityTripsActivity.class));
+
+
+                }
+                else if(id==R.id.outCityTrips)
+                {
+                    startActivity(new Intent(ProfileActivity.this,OutOfCityActivity.class));
+
+
+                }
+                else if(id==R.id.stateTrips)
+                {
+                    startActivity(new Intent(ProfileActivity.this,OutOfStateActivity.class));
+
+
+                }
+                return true;
+
+
+
+
+            }
+        });
+
         saveBtn=(Button)findViewById(R.id.updateProfile);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,6 +271,7 @@ private DatePickerDialog.OnDateSetListener mDateSetListener;
                 Glide.with(this)
                         .load(user.getPhotoUrl().toString())
                         .into(imageView);
+
             }
 
             if (user.getDisplayName() != null) {
@@ -265,6 +330,7 @@ public void saveUserInformation()
                         .setPhotoUri(Uri.parse(profileImageUrl))
                         .build();
 
+
                 firebaseUser.updateProfile(profile)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -316,30 +382,19 @@ public void saveUserInformation()
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater=getMenuInflater();
-        menuInflater.inflate(R.menu.main_menu,menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id=item.getItemId();
-        if(id==R.id.logout)
-        {
-            if(null!=mAuth.getCurrentUser()) {
-                mAuth.signOut();
-                if(null!= Profile.getCurrentProfile())
-                {
-                    LoginManager.getInstance().logOut();
-                }
+        if (t.onOptionsItemSelected(item)) {
+            profilePic=(ImageView)findViewById(R.id.profilePic);
+            Glide.with(this)
+                    .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString())
+                    .into(profilePic);
 
-            }
             return true;
         }
 
-
         return super.onOptionsItemSelected(item);
     }
+
 }

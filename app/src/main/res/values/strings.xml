@@ -2,4 +2,7 @@
     <string name="app_name">Travel Journal</string>
     <string name="facebook_app_id">2199676706956391</string>
     <string name="fb_login_protocol_scheme">fb2199676706956391</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
 </resources>
