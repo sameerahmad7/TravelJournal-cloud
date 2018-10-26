@@ -37,9 +37,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".CityTripsActivity" />
+        <activity android:name=".CityTripsActivity">
+
+        </activity>
         <activity android:name=".OutOfCityActivity" />
         <activity android:name=".OutOfStateActivity"></activity>
     </application>
