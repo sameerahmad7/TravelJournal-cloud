@@ -246,22 +246,19 @@ ImageView profilePic;
     private void showData(DataSnapshot snapshot)
     {
 
-
-           nameText.setText(snapshot.getValue(User.class).getName());
-            cityText.setText(snapshot.getValue(User.class).getCity());
-            dob.setText(snapshot.getValue(User.class).getDob());
-            for(String country:countries)
-            {
-                if(country.equals(snapshot.getValue(User.class).getCountry()))
-                {
-                spinner.setSelection(countries.indexOf(country));
-                }
-            }
-            noText.setText(snapshot.getValue(User.class).getNumber());
+if(snapshot.getValue()!=null) {
+    nameText.setText(snapshot.getValue(User.class).getName());
+    cityText.setText(snapshot.getValue(User.class).getCity());
+    dob.setText(snapshot.getValue(User.class).getDob());
+    for (String country : countries) {
+        if (country.equals(snapshot.getValue(User.class).getCountry())) {
+            spinner.setSelection(countries.indexOf(country));
+        }
+    }
+    noText.setText(snapshot.getValue(User.class).getNumber());
 
 
-
-
+}
     }
     private void loadUserInformation() {
         final FirebaseUser user = mAuth.getCurrentUser();
