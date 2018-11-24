@@ -3,6 +3,9 @@
     package="com.example.samee.traveljournal">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -11,6 +14,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyB9lZH7Az0IhfYbMNoXHLMr2ixn3xd6YZI"/>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -32,6 +41,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity">
+        </activity>
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".CityTripsActivity"></activity>
+        <activity android:name=".OutOfCityActivity" />
+        <activity android:name=".OutOfStateActivity" />
+        <activity android:name=".MapsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,12 +54,6 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".CityTripsActivity">
-
-        </activity>
-        <activity android:name=".OutOfCityActivity" />
-        <activity android:name=".OutOfStateActivity"></activity>
     </application>
 
 </manifest>
