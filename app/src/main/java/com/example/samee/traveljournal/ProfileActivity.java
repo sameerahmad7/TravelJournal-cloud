@@ -131,7 +131,7 @@ ImageView profilePic;
                 }
                 else if(id==R.id.cityTrips)
                 {
-                    startActivity(new Intent(ProfileActivity.this,CityTripsActivity.class));
+                    startActivity(new Intent(ProfileActivity.this,ViewCityTrips.class));
 
 
                 }
