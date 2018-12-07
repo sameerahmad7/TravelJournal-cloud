@@ -5,14 +5,14 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ViewCityTrips">
+    tools:context=".ViewOutCTrips">
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
->
+        >
 
     <ListView
-        android:id="@+id/viewCityTrips"
+        android:id="@+id/viewOCityTrips"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -22,7 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addCity"
+        android:id="@+id/addOCity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -32,8 +32,9 @@
         app:backgroundTint="@android:color/holo_blue_dark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewCityTrips"
+        app:layout_constraintTop_toBottomOf="@+id/viewOCityTrips"
         app:srcCompat="@android:drawable/ic_input_add" />
+
     </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.NavigationView

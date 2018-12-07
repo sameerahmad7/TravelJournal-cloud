@@ -137,13 +137,13 @@ ImageView profilePic;
                 }
                 else if(id==R.id.outCityTrips)
                 {
-                    startActivity(new Intent(ProfileActivity.this,OutOfCityActivity.class));
+                    startActivity(new Intent(ProfileActivity.this,ViewOutCTrips.class));
 
 
                 }
                 else if(id==R.id.stateTrips)
                 {
-                    startActivity(new Intent(ProfileActivity.this,OutOfStateActivity.class));
+                    startActivity(new Intent(ProfileActivity.this,ViewOutSTrips.class));
 
 
                 }

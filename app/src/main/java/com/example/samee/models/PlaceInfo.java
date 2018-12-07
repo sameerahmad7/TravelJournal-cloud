@@ -10,7 +10,7 @@ import com.google.android.gms.maps.model.LatLng;
  */
 
 public class PlaceInfo {
-    public PlaceInfo(String name, String address, String phoneNumber, String id, String attribution, Uri uri, LatLng latLng, float rating) {
+    public PlaceInfo(String name,String address,String phoneNumber, String id,String attribution, Uri uri, LatLng latLng, float rating) {
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;

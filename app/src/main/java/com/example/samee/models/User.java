@@ -1,7 +1,7 @@
 package com.example.samee.models;
 
 public class User {
-    public User(String name, String city, String dob, String country, String number) {
+    public User(String name,String city, String dob,String country,String number) {
         this.name = name;
         this.city = city;
         this.dob = dob;

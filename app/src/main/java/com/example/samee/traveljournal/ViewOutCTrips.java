@@ -32,24 +32,24 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 
-public class ViewCityTrips extends AppCompatActivity {
-ListView cityLists;
+public class ViewOutCTrips extends AppCompatActivity {
+    ListView OcityLists;
     private DrawerLayout dl;
     private ActionBarDrawerToggle t;
     private NavigationView nv;
     ImageView profilePic;
+
     FirebaseAuth mAuth=FirebaseAuth.getInstance();
     ArrayList<DataSnapshot> snapshots=new ArrayList<DataSnapshot>();
-    ArrayList<java.lang.String> tripNames=new ArrayList<java.lang.String>();
+    ArrayList<String> tripNames=new ArrayList<java.lang.String>();
     ArrayList<Posts>posts=new ArrayList<Posts>();
     FloatingActionButton actionButton;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_city_trips);
-        setTitle("City Trips");
+        setContentView(R.layout.activity_view_out_ctrips);
+        setTitle("Out of City Trips");
         dl = (DrawerLayout)findViewById(R.id.activity_main);
 
         t = new ActionBarDrawerToggle(
@@ -78,23 +78,24 @@ ListView cityLists;
                 }
                 else if(id==R.id.profile)
                 {
-                    startActivity(new Intent(ViewCityTrips.this,ProfileActivity.class));
+                    startActivity(new Intent(ViewOutCTrips.this,ProfileActivity.class));
 
 
                 }
                 else if(id==R.id.cityTrips)
                 {
-                    dl.closeDrawers();
+                    startActivity(new Intent(ViewOutCTrips.this,ViewCityTrips.class));
+
 
                 }
                 else if(id==R.id.outCityTrips)
                 {
-                    startActivity(new Intent(ViewCityTrips.this,ViewOutCTrips.class));
+                    dl.closeDrawers();
 
                 }
                 else if(id==R.id.stateTrips)
                 {
-                    startActivity(new Intent(ViewCityTrips.this,ViewOutSTrips.class));
+                    startActivity(new Intent(ViewOutCTrips.this,ViewOutSTrips.class));
 
                 }
                 return true;
@@ -105,12 +106,13 @@ ListView cityLists;
             }
         });
 
-        cityLists=(ListView)findViewById(R.id.viewCityTrips);
-        cityLists.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+        OcityLists=(ListView)findViewById(R.id.viewOCityTrips);
+        OcityLists.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 final DataSnapshot snapshot=snapshots.get(position);
-                PopupMenu popupMenu=new PopupMenu(ViewCityTrips.this,cityLists);
+                PopupMenu popupMenu=new PopupMenu(ViewOutCTrips.this,OcityLists);
                 popupMenu.getMenuInflater().inflate(R.menu.popup_menu,popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -130,9 +132,10 @@ ListView cityLists;
 
                             }
 
+
                             FirebaseUser firebaseUser=mAuth.getCurrentUser();
                             FirebaseDatabase.getInstance().getReference("posts").child(firebaseUser.getUid())
-                                    .child("City Trips").child(snapshot.getKey()).removeValue();
+                                    .child("Out of City Trips").child(snapshot.getKey()).removeValue();
 
                             return true;
                         }
@@ -146,19 +149,19 @@ ListView cityLists;
                 return false;
             }
         });
-        actionButton=(FloatingActionButton)findViewById(R.id.addCity);
+        actionButton=(FloatingActionButton)findViewById(R.id.addOCity);
         final ArrayAdapter arrayAdapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,tripNames);
-        cityLists.setAdapter(arrayAdapter);
+        OcityLists.setAdapter(arrayAdapter);
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ViewCityTrips.this,CreatePostActivity.class));
+                startActivity(new Intent(ViewOutCTrips.this,CreatePostActivity.class));
             }
         });
-        cityLists.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        OcityLists.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent=new Intent(ViewCityTrips.this,TripDetails.class);
+                Intent intent=new Intent(ViewOutCTrips.this,TripDetails.class);
                 intent.putExtra("post",posts.get(position));
                 startActivity(intent);
 
@@ -166,54 +169,55 @@ ListView cityLists;
             }
         });
         FirebaseUser firebaseUser=mAuth.getCurrentUser();
-      FirebaseDatabase.getInstance().getReference("posts").child(firebaseUser.getUid())
-              .child("City Trips").addChildEventListener(new ChildEventListener() {
-                  @Override
-                  public void onChildAdded(DataSnapshot dataSnapshot, java.lang.String s) {
-                      if(dataSnapshot.getValue()!=null)
-                      {
-                          posts.add(dataSnapshot.getValue(Posts.class));
-                          snapshots.add(dataSnapshot);
-                          tripNames.add(dataSnapshot.getValue(Posts.class).getTripName());
-                          arrayAdapter.notifyDataSetChanged();
-                      }
+        FirebaseDatabase.getInstance().getReference("posts").child(firebaseUser.getUid())
+                .child("Out of City Trips").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, java.lang.String s) {
+                if(dataSnapshot.getValue()!=null)
+                {
+                    posts.add(dataSnapshot.getValue(Posts.class));
+                    snapshots.add(dataSnapshot);
+                    tripNames.add(dataSnapshot.getValue(Posts.class).getTripName());
+                    arrayAdapter.notifyDataSetChanged();
+                }
 
-                  }
+            }
 
-                  @Override
-                  public void onChildChanged(DataSnapshot dataSnapshot, java.lang.String s) {
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, java.lang.String s) {
 
-                  }
+            }
 
-                  @Override
-                  public void onChildRemoved(DataSnapshot dataSnapshot) {
-                      int index=0;
-                      for(DataSnapshot snapshot:snapshots)
-                      {
-                          if(snapshot.getKey().toString().equals(dataSnapshot.getKey().toString()))
-                          {
-                              tripNames.remove(index);
-                              snapshots.remove(index);
-
-
-                          }
-                          index++;
-                      }
-                      arrayAdapter.notifyDataSetChanged();
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                int index=0;
+                for(DataSnapshot snapshot:snapshots)
+                {
+                    if(snapshot.getKey().toString().equals(dataSnapshot.getKey().toString()))
+                    {
+                        tripNames.remove(index);
+                        snapshots.remove(index);
 
 
-                  }
+                    }
+                    index++;
+                }
+                arrayAdapter.notifyDataSetChanged();
 
-                  @Override
-                  public void onChildMoved(DataSnapshot dataSnapshot, java.lang.String s) {
 
-                  }
+            }
 
-                  @Override
-                  public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, java.lang.String s) {
 
-                  }
-              });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
 
 
@@ -233,7 +237,5 @@ ListView cityLists;
 
         return super.onOptionsItemSelected(item);
     }
+
 }
-
-
-
