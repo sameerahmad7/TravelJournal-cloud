@@ -56,6 +56,7 @@ public MyViewHolder(View viewGroup)
     super(viewGroup);
     userBox=(TextView)viewGroup.findViewById(R.id.userRating);
     ratingBar=(RatingBar)viewGroup.findViewById(R.id.ratingBar);
+    ratingBar.setEnabled(false);
     reviewBox=(TextView)viewGroup.findViewById(R.id.review);
 
 }

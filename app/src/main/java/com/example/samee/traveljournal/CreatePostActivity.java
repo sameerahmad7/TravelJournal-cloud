@@ -51,7 +51,7 @@ EditText tripText;
     private ActionBarDrawerToggle t;
     private NavigationView nv;
     ImageView profilePic;
-
+Boolean save=false;
 TextView locationText;
 Spinner tripTypeText;
     FirebaseAuth mAuth;
@@ -176,10 +176,17 @@ ratingBar=(RatingBar)findViewById(R.id.locRat);
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         if(dataSnapshot.getValue()!=null)
                         {
-                            if(dataSnapshot.getValue(Ratings.class).getUser().equals(firebaseUser.getDisplayName()))
-                            {
-                                ratingBar.setRating(Float.parseFloat(dataSnapshot.getValue(Ratings.class).getRating()));
-                                reviewText.setText(dataSnapshot.getValue(Ratings.class).getReview());
+                            if(!save) {
+                                if (dataSnapshot.getValue(Ratings.class).getUser().equals(firebaseUser.getDisplayName())) {
+
+
+                                    ratingBar.setRating(Float.parseFloat(dataSnapshot.getValue(Ratings.class).getRating()));
+                                    reviewText.setText(dataSnapshot.getValue(Ratings.class).getReview());
+                                    String key = dataSnapshot.getKey();
+                                    FirebaseDatabase.getInstance().getReference("locations")
+                                            .child(post.getLocation()).child(key).removeValue();
+
+                                }
                             }
                         }
                     }
@@ -276,6 +283,7 @@ ratingBar=(RatingBar)findViewById(R.id.locRat);
                     Ratings ratings=new Ratings(name,rating,review,uris);
                     DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("locations");
                     databaseReference.child(post.getLocation()).push().setValue(ratings);
+                    save=true;
 
                 }
 
