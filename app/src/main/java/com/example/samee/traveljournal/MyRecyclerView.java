@@ -35,6 +35,7 @@ public MyRecyclerView(int itemLayout,List<Ratings> data)
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
     holder.ratingBar.setRating(Float.parseFloat(data.get(position).getRating()));
     holder.userBox.setText(data.get(position).getUser());
+    holder.reviewBox.setText(data.get(position).getReview());
 
 
 
@@ -49,11 +50,13 @@ public MyRecyclerView(int itemLayout,List<Ratings> data)
     public static class MyViewHolder extends RecyclerView.ViewHolder  {
        public TextView userBox;
        public RatingBar ratingBar;
+       public TextView reviewBox;
 public MyViewHolder(View viewGroup)
 {
     super(viewGroup);
     userBox=(TextView)viewGroup.findViewById(R.id.userRating);
     ratingBar=(RatingBar)viewGroup.findViewById(R.id.ratingBar);
+    reviewBox=(TextView)viewGroup.findViewById(R.id.review);
 
 }
 

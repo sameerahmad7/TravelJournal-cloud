@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.samee.models.Posts;
+import com.example.samee.models.Ratings;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -82,6 +83,10 @@ public class ViewOutCTrips extends AppCompatActivity {
 
 
                 }
+                else if(id==R.id.locations)
+                {
+                    startActivity(new Intent(ViewOutCTrips.this,ViewLocations.class));
+                }
                 else if(id==R.id.cityTrips)
                 {
                     startActivity(new Intent(ViewOutCTrips.this,ViewCityTrips.class));
@@ -119,6 +124,44 @@ public class ViewOutCTrips extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem item) {
                         if(item.getItemId()==R.id.delete)
                         {
+                            final FirebaseUser firebaseUser=mAuth.getCurrentUser();
+                            FirebaseDatabase.getInstance().getReference("locations")
+                                    .child(snapshot.getValue(Posts.class).getLocation()).addChildEventListener(new ChildEventListener() {
+                                @Override
+                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                    if(dataSnapshot.getValue()!=null)
+                                    {
+                                        if(dataSnapshot.getValue(Ratings.class).getUser().equals(firebaseUser.getDisplayName()))
+                                        {
+                                            String key=dataSnapshot.getKey();
+                                            FirebaseDatabase.getInstance().getReference("locations")
+                                                    .child(snapshot.getValue(Posts.class).getLocation()).child(key).removeValue();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                                }
+
+                                @Override
+                                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                }
+
+                                @Override
+                                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
                             for(String url:snapshot.getValue(Posts.class).getUris())
                             {
                                 FirebaseStorage.getInstance().getReferenceFromUrl(url).delete()
@@ -133,7 +176,6 @@ public class ViewOutCTrips extends AppCompatActivity {
                             }
 
 
-                            FirebaseUser firebaseUser=mAuth.getCurrentUser();
                             FirebaseDatabase.getInstance().getReference("posts").child(firebaseUser.getUid())
                                     .child("Out of City Trips").child(snapshot.getKey()).removeValue();
 

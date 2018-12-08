@@ -60,7 +60,8 @@
         <activity android:name=".ViewLocations" />
         <activity android:name=".TripDetails" />
         <activity android:name=".ViewOutCTrips" />
-        <activity android:name=".ViewOutSTrips"></activity>
+        <activity android:name=".ViewOutSTrips" />
+        <activity android:name=".GalleryActivity"></activity>
     </application>
 
 </manifest>

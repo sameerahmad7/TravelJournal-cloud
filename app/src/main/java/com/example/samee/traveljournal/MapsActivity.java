@@ -54,6 +54,7 @@ import com.google.android.gms.tasks.Task;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MapsActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -69,6 +70,7 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.O
     private PlaceAutocompleteAdapter mAdapter;
     private GoogleApiClient mGoogleApiClient;
     Location currentLocation;
+    String loc;
 
     int count = 0;
     Marker marker;
@@ -104,6 +106,15 @@ public class MapsActivity extends AppCompatActivity implements GoogleApiClient.O
             i.putExtra("Location", mPlace.getName());
             this.setResult(123, i);
             super.finish();
+        }
+        else if(mText.getText()!=null)
+        {
+            Intent i = getIntent();
+            i.putExtra("Location", mText.getText().toString());
+            this.setResult(123, i);
+            super.finish();
+
+
         }
         else {
             Toast.makeText(this,"Enter a location!",Toast.LENGTH_LONG).show();
@@ -175,15 +186,16 @@ getDeviceLocation();
                     location.addOnCompleteListener(new OnCompleteListener() {
                         @Override
                         public void onComplete(@NonNull Task task) {
-                            if(task.isSuccessful()){
+                            if(task.isSuccessful()) {
                                 Log.d(TAG, "onComplete: found location!");
                                 Location currentLocation = (Location) task.getResult();
 
-                                moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                        15f,
-                                        "My Location");
+                                    moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                                            15f,
+                                            "My Location");
+                                }
 
-                            }else{
+                            else{
                                 Log.d(TAG, "onComplete: current location is null");
                                 Toast.makeText(MapsActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                             }
@@ -199,21 +211,42 @@ getDeviceLocation();
 
 
 
-
+    private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
+        String strAdd = "";
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+               strAdd=returnedAddress.getAddressLine(0);
+                Log.d("Current loction address", strAdd);
+            } else {
+                Log.d("Current loction address", "No Address returned!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d("Current loction address", "Canont get Address!");
+        }
+        return strAdd;
+    }
 
     private void moveCamera(LatLng latLng, float zoom,String title) {
         Log.d(TAG, "moving camera to lat: " + latLng.latitude + " long: " + latLng.longitude);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-
-        if(!title.equals("My Location"))
+        if(title.equals("My Location"))
         {
+
+            mText.setText(getCompleteAddressString(latLng.latitude,latLng.longitude));
+            Log.d(TAG,getCompleteAddressString(latLng.latitude,latLng.longitude));
+        }
+
             MarkerOptions markerOptions=new MarkerOptions().position(latLng).title(title);
             if(marker!=null)
             {
                 marker.remove();
             }
             marker=mMap.addMarker(markerOptions);
-        }
+
         HideSoftKeyboard();
     }
 
@@ -225,6 +258,12 @@ getDeviceLocation();
                 Toast.makeText(getApplicationContext(), "Map is ready", Toast.LENGTH_LONG).show();
                 mMap = googleMap;
                 if (mLocationPermissionGranted) {
+                    if(getIntent().hasExtra("location"))
+                    {
+                        mText.setText(getIntent().getStringExtra("location"));
+                        geoLocate();
+                    }
+                    else
                     getDeviceLocation();
                     if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 

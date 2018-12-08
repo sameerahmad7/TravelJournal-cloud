@@ -1,11 +1,15 @@
 package com.example.samee.traveljournal;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.example.samee.models.Ratings;
 import com.google.firebase.database.ChildEventListener;
@@ -14,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +27,7 @@ public class LocationRatings extends AppCompatActivity {
     public List<Ratings> data=new ArrayList<Ratings>();
     public   MyRecyclerView myRecyclerViewAdapter;
     String location;
+    List<String> uris=new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +57,11 @@ public class LocationRatings extends AppCompatActivity {
 
                Ratings rating=dataSnapshot.getValue(Ratings.class);
                data.add(rating);
+               for(String uri:rating.getUris())
+               {
+                   uris.add(uri);
+               }
+
                myRecyclerViewAdapter.notifyDataSetChanged();
 
            }
@@ -63,6 +74,8 @@ public class LocationRatings extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+
 
             }
 
@@ -79,4 +92,23 @@ public class LocationRatings extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
+        MenuInflater menuInflater=getMenuInflater();
+        menuInflater.inflate(R.menu.location_details_menu,menu);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.gallery)
+        {
+            Intent intent=new Intent(LocationRatings.this,GalleryActivity.class);
+            intent.putExtra("location",location);
+            intent.putExtra("uris", (Serializable) uris);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

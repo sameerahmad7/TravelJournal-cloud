@@ -34,6 +34,9 @@ import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -55,7 +58,9 @@ Spinner tripTypeText;
 java.lang.String tripName;
 java.lang.String location;
 java.lang.String tripType;
+EditText reviewText;
 RatingBar ratingBar;
+Posts post=null;
     ProgressBar progressBar;
 ArrayList<java.lang.String> uris;
 Button saveBtn;
@@ -70,6 +75,7 @@ ArrayList<java.lang.String> types;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_post);
+        reviewText=(EditText)findViewById(R.id.reviewText);
         dl = (DrawerLayout)findViewById(R.id.activity_main);
 
         t = new ActionBarDrawerToggle(
@@ -113,6 +119,10 @@ ArrayList<java.lang.String> types;
                     startActivity(new Intent(CreatePostActivity.this,ViewOutCTrips.class));
 
                 }
+                else if(id==R.id.locations)
+                {
+                    startActivity(new Intent(CreatePostActivity.this,ViewLocations.class));
+                }
                 else if(id==R.id.stateTrips)
                 {
                     startActivity(new Intent(CreatePostActivity.this,ViewOutSTrips.class));
@@ -134,6 +144,7 @@ ratingBar=(RatingBar)findViewById(R.id.locRat);
         saveBtn=(Button)findViewById(R.id.saveTrip);
         uris=new ArrayList<java.lang.String>();
 
+
         mStorage = FirebaseStorage.getInstance().getReference();
         types = new ArrayList<java.lang.String>();
         types.add("City Trip");
@@ -145,10 +156,69 @@ ratingBar=(RatingBar)findViewById(R.id.locRat);
 
         tripText=(EditText)findViewById(R.id.tripName);
         locationText=(TextView)findViewById(R.id.location);
+        if(null!=getIntent())
+        {
+            if(getIntent().getExtras().containsKey("post")) {
+                post = (Posts) getIntent().getSerializableExtra("post");
+                tripText.setText(post.getTripName());
+                locationText.setText(post.getLocation());
+                if (post.getTripType().equals("City Trip"))
+                    tripTypeText.setSelection(0);
+                else if (post.getTripType().equals("Out of City Trip"))
+                    tripTypeText.setSelection(1);
+                else tripTypeText.setSelection(2);
+                final FirebaseUser firebaseUser=mAuth.getCurrentUser();
+                uris = post.getUris();
+                FirebaseDatabase.getInstance().getReference("posts").child(firebaseUser.getUid()).child(post.getTripType()+'s').child(post.getTripName()).removeValue();
+                FirebaseDatabase.getInstance().getReference("locations")
+                        .child(post.getLocation()).addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        if(dataSnapshot.getValue()!=null)
+                        {
+                            if(dataSnapshot.getValue(Ratings.class).getUser().equals(firebaseUser.getDisplayName()))
+                            {
+                                ratingBar.setRating(Float.parseFloat(dataSnapshot.getValue(Ratings.class).getRating()));
+                                reviewText.setText(dataSnapshot.getValue(Ratings.class).getReview());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+
+
+        }
+
         locationText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CreatePostActivity.this, MapsActivity.class);
+                if(!locationText.getText().equals("Enter a Location") && !locationText.getText().toString().isEmpty())
+                {
+                    intent.putExtra("location",locationText.getText().toString());
+                }
+
                 startActivityForResult(intent,RESULT_LOAD_MAP);
 
             }
@@ -200,10 +270,12 @@ ratingBar=(RatingBar)findViewById(R.id.locRat);
                        Toast.makeText(getApplicationContext(),"Success!",Toast.LENGTH_SHORT).show();
                         }
                     });
+                    String review=reviewText.getText().toString();
                     String rating= java.lang.String.valueOf(ratingBar.getRating());
                     String name=firebaseUser.getDisplayName();
-                    Ratings ratings=new Ratings(name,rating);
+                    Ratings ratings=new Ratings(name,rating,review,uris);
                     DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("locations");
+                    FirebaseDatabase.getInstance().getReference("uris").child(post.getLocation()).push().setValue(post.getUris());
                     databaseReference.child(post.getLocation()).push().setValue(ratings);
 
                 }

@@ -135,6 +135,11 @@ ImageView profilePic;
 
 
                 }
+                else if(id==R.id.locations)
+                {
+                    startActivity(new Intent(ProfileActivity.this,ViewLocations.class));
+                }
+
                 else if(id==R.id.outCityTrips)
                 {
                     startActivity(new Intent(ProfileActivity.this,ViewOutCTrips.class));

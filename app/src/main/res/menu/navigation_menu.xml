@@ -4,6 +4,10 @@
     <item android:id="@+id/profile"
         android:icon="@drawable/ic_action_profile"
         android:title="My Profile"/>
+    <item android:id="@+id/locations"
+        android:icon="@drawable/ic_location"
+        android:title="Locations"/>
+
     <item android:title="Diary">
         <menu>
             <item

@@ -24,6 +24,8 @@ public class TripDetails extends AppCompatActivity {
     public   TripAdapter myRecyclerViewAdapter;
     TextView tripName;
     TextView locName;
+    TextView tripType;
+    Posts posts;
     public List<String> videoData=new ArrayList<String>();
 
     @Override
@@ -32,9 +34,11 @@ public class TripDetails extends AppCompatActivity {
         setContentView(R.layout.activity_trip_details);
         tripName=(TextView)findViewById(R.id.tripName);
         locName=(TextView)findViewById(R.id.locName);
-        Posts posts=(Posts)getIntent().getSerializableExtra("post");
+        tripType=(TextView)findViewById(R.id.tripType);
+         posts=(Posts)getIntent().getSerializableExtra("post");
         tripName.setText(posts.getTripName());
         locName.setText(posts.getLocation());
+        tripType.setText(posts.getTripType());
         for(String uri:posts.getUris())
         {
             if(!uri.contains("mp4"))
@@ -76,6 +80,14 @@ public class TripDetails extends AppCompatActivity {
             else
                 Toast.makeText(getApplicationContext(),"No Video Data!",Toast.LENGTH_SHORT).show();
 
+        }
+        else if(item.getItemId()==R.id.edit)
+        {
+            if(posts!=null) {
+                Intent intent = new Intent(TripDetails.this, CreatePostActivity.class);
+                intent.putExtra("post", posts);
+                startActivity(intent);
+            }
         }
 
         return super.onOptionsItemSelected(item);
