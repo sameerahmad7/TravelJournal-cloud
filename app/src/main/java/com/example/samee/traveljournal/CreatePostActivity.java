@@ -275,7 +275,6 @@ ratingBar=(RatingBar)findViewById(R.id.locRat);
                     String name=firebaseUser.getDisplayName();
                     Ratings ratings=new Ratings(name,rating,review,uris);
                     DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("locations");
-                    FirebaseDatabase.getInstance().getReference("uris").child(post.getLocation()).push().setValue(post.getUris());
                     databaseReference.child(post.getLocation()).push().setValue(ratings);
 
                 }
